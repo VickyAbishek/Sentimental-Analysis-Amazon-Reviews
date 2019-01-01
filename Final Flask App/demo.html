@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+<style>
+    button {
+        color: yellow;
+        background-color: #43434F;
+        height: 35px;
+        border-radius: 7px;
+        box-shadow: 2px 2px 2px 2px #888888;
+    }
+
+    textarea:focus {
+        outline: focus;
+        border-radius: 7px;
+    }
+</style>
+<script type="text/javascript">
+    // var callback = function(r) { console.log(r); };
+    var callback = function(response) {
+                    console.log(JSON.stringify(response));
+                    var img = document.getElementById("loading");
+                    var res = document.getElementById("result");
+                    img.style.visibility = "hidden";
+                    if ( response == 1 )
+                    {
+                        res.style.visibility = "visible";
+                        res.src = "finalhappy.png";
+                    } else if ( response == 0 ) {
+                        res.style.visibility = "visible";
+                        res.src = "finalsad.png"
+                    } else {
+                        console.log('none');
+                    }
+                    console.log(response);
+                };
+    function sendRequest() {
+        var img = document.getElementById("loading");
+        img.src = "loading.gif";
+        img.src.visibility = "visible";
+        var request_value = document.getElementById("request").value;
+        console.log(request_value);
+        httpGetAsync("/getsentiment",callback, request_value);
+    }
+    function httpGetAsync(theUrl, callback, value)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+        xmlHttp.send(value);
+    }
+
+    function clearContents() {
+
+        var contents = document.getElementById("request");
+        contents.value = "";
+        var res = document.getElementById("result");
+        res.style.visibility = "hidden";
+    }
+
+    function pageLoaded() {
+
+    }
+    </script>
+</head>
+<body background="/newbg.jpg" style="background-size: cover" onload="pageLoaded()">
+    <div id="main_container" style="display:flex;">
+        <div id="left_container" style="width: 50%">
+                <div id="title_content" style="padding: 5px;
+                padding-left:25px;
+                font-size: xx-large">
+                    <span style="font-weight:bolder; 
+                    color:#f9a825 ">Cunning Linguists</span><br/>
+                    <span style="font-weight:bolder;">Sentimental Analysis</span>
+                </div>
+                <textarea 
+                style="margin-top:15%; margin-left:20%;
+                box-shadow: 2px 2px 2px 2px #888888;
+                padding: 4px;
+                border-radius: 20px"
+                name="paragraph_text" cols="80" rows="20" id="request"></textarea>
+                <div id="buttons_div"
+                style="padding-top:10px;float:right; margin-right: 5%">
+                    <button onclick="clearContents()">Clear</button>
+                    <button onclick="sendRequest()">Generate Sentiment</button>
+                </div>
+        </div>
+        <div id="right_container" style="width: 50%;">
+            <img src="/loading.gif" 
+            style="float:left;
+            height: 250px;
+            visibility: hidden;
+            margin-left: -85px;
+            margin-top: 20%"
+            id="loading"/>
+            <img src="/finalhappy.png" id="result"
+                style="
+                height: 700px;
+                float:right;
+                visibility: hidden;
+                overflow: visible;
+                margin-right: -40px"
+            />
+        </div>
+    </div>
+</body>

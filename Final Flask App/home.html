@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    // var callback = function(r) { console.log(r); };
+    var callback = function(response) {
+                    console.log(JSON.stringify(response));
+                    var img = document.getElementById("image_container");
+                    if ( response == 1 )
+                    {
+                        img.src = "happy.jpg";
+                    } else if ( response == 0 ) {
+                        img.src = "sad.png"
+                    } else {
+                        console.log('none');
+                    }
+                    console.log(response);
+                };
+    function sendRequest() {
+        var img = document.getElementById("image_container");
+        img.src = "semantria.gif";
+        var request_value = document.getElementById("request").value;
+        console.log(request_value);
+        // testAjax();
+        httpGetAsync("/getsentiment",callback, request_value);
+        // $.post("postmethod", "wopooo", function(){});
+    }
+    function httpGetAsync(theUrl, callback, value)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+        xmlHttp.send(value);
+    }
+
+    function clearText() {
+        var contents = document.getElementById("request");
+        contents.value = "";
+    }
+    </script>
+</head>
+<body>
+    <div class="center_div" style="display:inline-flex;  margin-left:30%; margin-top:10%;">
+        <div class="left_div" style="display:grid;">
+            <!-- <input type="text" placeholder="request" id="request"/> -->
+            <textarea name="paragraph_text" cols="50" rows="10" id="request"></textarea>
+            <div id="buttons_div" style="margin-left:40%; display: flex;">
+                    <button style="height:50px; 
+                    margin-top: 10px; 
+                    width: 60px;
+                    margin-right: 10px;
+                    color:#607d8b; 
+                    background-color: #fafafa;
+                    font-weight: bold;" 
+                    onclick="clearText()"> Clear </button>
+
+                    <button style="height:50px;
+                    width: 150px; 
+                    margin-top: 10px; 
+                    color:white;
+                    background-color: #3196FE" 
+                    onclick="sendRequest()"> Start Analysis </button>
+            </div>
+        </div>
+        <div class="right_div" style="margin-left:25px;">
+            <!-- <input type="text" placeholder="response" id="response" style="margin-left:25px"/> -->
+            <!-- <img src="media/newhappy.png" style="max-width:140px; max-height:120px" id="image_container"/> -->
+            <img src="media/newhappy.png" style="max-width:140px; max-height:120px" id="image_container"/>
+            <!-- <img src="/happy.jpg" style="max-width:140px; max-height:120px" id="image_container"/> -->
+        </div>
+    </div>
+</body>
